@@ -166,7 +166,26 @@ const Account = () => {
             >
               Hủy đơn
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={() => navigate(`/tracking?orderId=${order.id}`)}
+            >
+              <Package className="mr-2 h-4 w-4" />
+              Theo dõi
+            </Button>
           </div>
+        )}
+        {order.status !== "pending" && (
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => navigate(`/tracking?orderId=${order.id}`)}
+          >
+            <Package className="mr-2 h-4 w-4" />
+            Theo dõi đơn hàng
+          </Button>
         )}
       </CardContent>
     </Card>

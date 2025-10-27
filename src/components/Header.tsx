@@ -1,7 +1,10 @@
-import { Search, ShoppingCart, User, Settings, Info } from "lucide-react";
+import { Search, ShoppingCart, User, Settings, Info, Heart, GitCompare, Package } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useCompare } from "@/contexts/CompareContext";
 import Cart from "@/components/Cart";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,6 +22,8 @@ interface HeaderProps {
 
 const Header = ({ onSearchChange, searchQuery }: HeaderProps) => {
   const { totalItems } = useCart();
+  const { wishlist } = useWishlist();
+  const { compareList } = useCompare();
   const navigate = useNavigate();
 
   return (
@@ -39,8 +44,11 @@ const Header = ({ onSearchChange, searchQuery }: HeaderProps) => {
               <a href="/#products" className="text-sm font-medium hover:text-primary transition-colors">
                 Sản phẩm
               </a>
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              <a href="/about" className="text-sm font-medium hover:text-primary transition-colors">
                 Về chúng tôi
+              </a>
+              <a href="/admin" className="text-sm font-medium hover:text-primary transition-colors">
+                Quản lý
               </a>
             </nav>
           </div>
@@ -59,6 +67,34 @@ const Header = ({ onSearchChange, searchQuery }: HeaderProps) => {
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => navigate("/wishlist")}
+            >
+              <Heart className="h-5 w-5" />
+              {wishlist.length > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px]">
+                  {wishlist.length}
+                </Badge>
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => navigate("/compare")}
+            >
+              <GitCompare className="h-5 w-5" />
+              {compareList.length > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px]">
+                  {compareList.length}
+                </Badge>
+              )}
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -69,6 +105,10 @@ const Header = ({ onSearchChange, searchQuery }: HeaderProps) => {
                 <DropdownMenuItem onClick={() => navigate("/account")}>
                   <User className="mr-2 h-4 w-4" />
                   Tài khoản
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/tracking")}>
+                  <Package className="mr-2 h-4 w-4" />
+                  Theo dõi đơn hàng
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   <Settings className="mr-2 h-4 w-4" />

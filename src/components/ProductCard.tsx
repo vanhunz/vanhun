@@ -1,8 +1,10 @@
-import { ShoppingCart, Star, Eye } from "lucide-react";
+import { ShoppingCart, Star, Eye, Heart, GitCompare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useCompare } from "@/contexts/CompareContext";
 import { useNavigate } from "react-router-dom";
 
 export interface Product {
@@ -23,6 +25,8 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const { addToWishlist, isInWishlist } = useWishlist();
+  const { addToCompare, isInCompare } = useCompare();
   const navigate = useNavigate();
   
   const discount = product.originalPrice
@@ -32,6 +36,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart(product);
+  };
+
+  const handleAddToWishlist = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToWishlist(product);
+  };
+
+  const handleAddToCompare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCompare(product);
   };
 
   return (
@@ -55,6 +69,26 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Badge variant="destructive">Hết hàng</Badge>
           </div>
         )}
+        
+        {/* Action buttons */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button
+            size="icon"
+            variant="secondary"
+            onClick={handleAddToWishlist}
+            className={isInWishlist(product.id) ? "bg-primary text-primary-foreground" : ""}
+          >
+            <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? "fill-current" : ""}`} />
+          </Button>
+          <Button
+            size="icon"
+            variant="secondary"
+            onClick={handleAddToCompare}
+            className={isInCompare(product.id) ? "bg-primary text-primary-foreground" : ""}
+          >
+            <GitCompare className="h-4 w-4" />
+          </Button>
+        </div>
         
         {/* Quick view button */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
