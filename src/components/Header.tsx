@@ -1,9 +1,16 @@
-import { Search, ShoppingCart, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Settings, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import Cart from "@/components/Cart";
 import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   onSearchChange: (value: string) => void;
@@ -52,6 +59,29 @@ const Header = ({ onSearchChange, searchQuery }: HeaderProps) => {
           </div>
 
           <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate("/account")}>
+                  <User className="mr-2 h-4 w-4" />
+                  Tài khoản
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/settings")}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Cài đặt
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/about")}>
+                  <Info className="mr-2 h-4 w-4" />
+                  Thông tin
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Cart>
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
@@ -62,9 +92,6 @@ const Header = ({ onSearchChange, searchQuery }: HeaderProps) => {
                 )}
               </Button>
             </Cart>
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-5 w-5" />
-            </Button>
           </div>
         </div>
       </div>
