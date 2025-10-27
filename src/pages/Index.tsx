@@ -6,20 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { products } from "@/data/products";
-import { Leaf, Truck, Shield, HeartHandshake, SlidersHorizontal, Star } from "lucide-react";
+import { Leaf, Truck, Shield, HeartHandshake, SlidersHorizontal, Star, ArrowUpDown } from "lucide-react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [priceRange, setPriceRange] = useState([0, 500000]);
   const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState("default");
 
   const categories = ["Tất cả", ...Array.from(new Set(products.map((p) => p.category)))];
   const maxPrice = Math.max(...products.map(p => p.price));
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    let filtered = products.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory =
         selectedCategory === "Tất cả" || product.category === selectedCategory;
@@ -27,7 +29,27 @@ const Index = () => {
       const matchesRating = product.rating >= minRating;
       return matchesSearch && matchesCategory && matchesPrice && matchesRating;
     });
-  }, [searchQuery, selectedCategory, priceRange, minRating]);
+
+    // Sort products
+    switch (sortBy) {
+      case "price-asc":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "name":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "rating":
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [searchQuery, selectedCategory, priceRange, minRating, sortBy]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -157,13 +179,14 @@ const Index = () => {
                 </div>
               </div>
 
-              <Button 
+                <Button 
                 variant="ghost" 
                 className="w-full mt-4"
                 onClick={() => {
                   setSelectedCategory("Tất cả");
                   setPriceRange([0, maxPrice]);
                   setMinRating(0);
+                  setSortBy("default");
                 }}
               >
                 Xóa bộ lọc
@@ -177,6 +200,22 @@ const Index = () => {
               <p className="text-muted-foreground">
                 Hiển thị <span className="font-semibold text-foreground">{filteredProducts.length}</span> sản phẩm
               </p>
+              
+              <div className="flex items-center gap-2">
+                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Sắp xếp theo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Mặc định</SelectItem>
+                    <SelectItem value="price-asc">Giá: Thấp đến cao</SelectItem>
+                    <SelectItem value="price-desc">Giá: Cao đến thấp</SelectItem>
+                    <SelectItem value="name">Tên: A-Z</SelectItem>
+                    <SelectItem value="rating">Đánh giá cao nhất</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {filteredProducts.length === 0 ? (

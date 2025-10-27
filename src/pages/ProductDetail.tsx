@@ -111,7 +111,10 @@ const ProductDetail = () => {
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  {product.rating} sao (128 đánh giá)
+                  {product.rating} sao ({(() => {
+                    const reviews = JSON.parse(localStorage.getItem("reviews") || "{}");
+                    return reviews[product.id]?.length || 0;
+                  })()} đánh giá)
                 </span>
               </div>
 
@@ -203,6 +206,53 @@ const ProductDetail = () => {
                 </p>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Đánh giá từ khách hàng</h2>
+          <div className="space-y-4">
+            {(() => {
+              const reviews = JSON.parse(localStorage.getItem("reviews") || "{}");
+              const productReviews = reviews[product.id] || [];
+              
+              if (productReviews.length === 0) {
+                return (
+                  <div className="border rounded-lg p-8 text-center text-muted-foreground">
+                    Chưa có đánh giá nào cho sản phẩm này
+                  </div>
+                );
+              }
+
+              return productReviews.map((review: any, index: number) => (
+                <div key={index} className="border rounded-lg p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium">{review.userName}</span>
+                        <div className="flex">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < review.rating
+                                  ? "fill-yellow-400 text-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-muted-foreground mb-2">{review.comment}</p>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(review.date).toLocaleDateString("vi-VN")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ));
+            })()}
           </div>
         </div>
 
