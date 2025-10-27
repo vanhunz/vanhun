@@ -89,3 +89,4 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+// dummy update for sync test
