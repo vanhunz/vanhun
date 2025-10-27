@@ -5,15 +5,11 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/vanhun/", // ✅ bắt buộc có để GitHub Pages nhận đúng thư mục
   server: {
-    host: "0.0.0.0", // 👈 thay "::" bằng "0.0.0.0" để tương thích Windows
+    host: "::",
     port: 8080,
   },
-  plugins: [
-    react(),
-    ...(mode === "development" ? [componentTagger()] : []),
-  ],
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
