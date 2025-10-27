@@ -109,7 +109,12 @@ const Cart = ({ children }: CartProps) => {
                 <Button variant="outline" className="flex-1" onClick={clearCart}>
                   Xóa tất cả
                 </Button>
-                <Button className="flex-1 bg-gradient-to-r from-primary to-accent">
+                <Button 
+                  className="flex-1 bg-gradient-to-r from-primary to-accent"
+                  onClick={() => {
+                    window.location.href = "/checkout";
+                  }}
+                >
                   Thanh toán
                 </Button>
               </div>
