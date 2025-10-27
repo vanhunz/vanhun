@@ -5,6 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: "/vanhun/", // ✅ thêm dòng này để GitHub Pages nhận đúng đường dẫn
   server: {
     host: "::",
     port: 8080,
