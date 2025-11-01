@@ -28,8 +28,3 @@
   },
   "include": ["src"]
 }
-{
-  "name": "my-project",
-  "version": "1.0.0",
-  "_dummy": "sync test"
-}
